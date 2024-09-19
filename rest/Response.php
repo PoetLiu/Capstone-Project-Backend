@@ -17,6 +17,9 @@ class Response {
             http_response_code(400);
         }
         header('Content-Type: application/json; charset=utf-8');
+
+        // disables CORS protection
+        header('Access-Control-Allow-Origin: *');
         echo json_encode($this);
     }
 
