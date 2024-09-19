@@ -33,4 +33,22 @@ class UserDAO {
             return $e->getMessage();
         }
     }
+
+    public function login($email, $password) {
+        $query = "SELECT id, username, email, password_hash FROM users WHERE email = :email LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $user = new User($row['id'], $row['username'], $row['email'], $row['password_hash']);
+
+            if (password_verify($password, $user->getPasswordHash())) {
+                return $user;
+            }
+        }
+
+        return false;
+    }
 }
