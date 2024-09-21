@@ -1,17 +1,10 @@
 <?php
 class Response {
-    public $status;
-    public $msg;
-    public $data;
-
-    public function __construct($status, $msg, $data) {
-        $this->status = $status;
-        $this->msg = $msg;
-        $this->data = $data;
+    public function __construct() {
     }
 
-    public function render() {
-        if ($this->status == 0) {
+    public static function echo($status, $msg, $data) {
+        if ($status == 0) {
             http_response_code(200);
         } else {
             http_response_code(400);
@@ -20,7 +13,11 @@ class Response {
 
         // disables CORS protection
         header('Access-Control-Allow-Origin: *');
-        echo json_encode($this);
+        echo json_encode([
+            "status" => $status,
+            "msg" => $msg,
+            "data" => $data
+        ]);
     }
 
 }

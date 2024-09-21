@@ -17,8 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     if ($name == '' || $email == '' || $password == '') {
-        $resp = new Response(1, "Name, email or password is missing, please check your parameters.", null);
-        $resp->render();
+        Response::echo(1, "Name, email or password is missing, please check your parameters.", null);
         exit();
     }
 
@@ -36,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $msg = "There was an issue with your registration. Please try again. $result";
     }
-    $resp = new Response($status, $msg, null);
-    $resp->render();
+    Response::echo($status, $msg, null);
 }
 ?>

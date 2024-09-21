@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $msg = "Invalid email or password";
     }
 
-    $resp = new Response($status, $msg, $result);
-    $resp->render();
+    Response::echo($status, $msg, $result);
 }
 ?>
