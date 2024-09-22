@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/..//model/User.php';
 class UserDAO {
     private $conn;
     public function __construct($db) {
@@ -50,5 +51,43 @@ class UserDAO {
         }
 
         return false;
+    }
+
+    public function getOne($email) {
+        $query = "SELECT id, username, email, password_hash FROM users WHERE email = :email LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return new User($row['id'], $row['username'], $row['email'], $row['password_hash']);
+        }
+
+        return false;
+    }
+
+    public function resetPWD($email, $newPWD) {
+        $query = "SELECT id FROM users WHERE email = :email";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        if ($stmt->rowCount() == 0) {
+            return "email_not_exists";
+        }
+
+        $query = "UPDATE users SET password_hash = :password_hash WHERE email = :email";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password_hash', $newPWD);
+
+        try {
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error during reseting password: " . $e->getMessage());
+            return $e->getMessage();
+        }
     }
 }

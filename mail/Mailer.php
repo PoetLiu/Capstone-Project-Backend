@@ -1,21 +1,24 @@
 <?php
-require_once "./PHPMailer/src/Exception.php";
-require_once "./PHPMailer/src/PHPMailer.php";
-require_once "./PHPMailer/src/SMTP.php";
+require_once __DIR__ . "/PHPMailer/src/Exception.php";
+require_once __DIR__. "/PHPMailer/src/PHPMailer.php";
+require_once __DIR__. "/PHPMailer/src/SMTP.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+define("STORE_NAME", "PrimeMart");
+define("UI_URL", "http://localhost:3000/reset_password");
+
 class Mailer
 {
     //Create an instance; passing `true` enables exceptions
-    private $mail = new PHPMailer(true);
+    private $mail; 
 
-    public function __constructor()
+    public function __construct()
     {
         $mail = new PHPMailer(true);
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
         $mail->Host = 'ssl://smtp.gmail.com';                 //Set the SMTP server to send through
         $mail->SMTPAuth = true;                                   //Enable SMTP authentication
@@ -25,7 +28,7 @@ class Mailer
         $mail->Port = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('noreply@primemart.com', 'PrimeMart');
+        $mail->setFrom('noreply@primemart.com', STORE_NAME);
         $this->mail = $mail;
     }
 
@@ -33,7 +36,7 @@ class Mailer
     {
         try {
             //Server settings
-            $this->mail->addAddress($receiverEmail, @$reciverName);     //Add a recipient
+            $this->mail->addAddress($receiverEmail, $reciverName);     //Add a recipient
 
             //Content
             $this->mail->isHTML(true);                                  //Set email format to HTML
@@ -45,6 +48,20 @@ class Mailer
         } catch (Exception $e) {
             return "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
         }
+    }
+
+    public function sendResetPasswordLink($receiverEmail, $reciverName, $sessionId, $token) {
+        return $this->send($receiverEmail, 
+            $reciverName,
+            "Reset your password on PrimeMart", 
+            "
+                <h2>Hi $reciverName,</h2>
+
+                There was a request to change your password!<br/>
+                If you did not make this request then please ignore this email.<br/>
+                Otherwise, please click this link to change your password: <br/>
+                <a href=\"" . UI_URL. "?PHPSESSID=$sessionId&token=$token\"" . ">Reset Password</a>"
+        );
     }
 }
 
