@@ -45,6 +45,7 @@ if ($action == "SEND_EMAIL_LINK") {
         $status = 1;
         if ($result === true) {
             $status = 0;
+            session_destroy();
         } elseif ($result === "email_not_exists") {
             $msg = "The email is unknown.";
         } else {
