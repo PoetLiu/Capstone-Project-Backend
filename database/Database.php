@@ -3,7 +3,7 @@ class Database {
     private const HOST = "localhost";
     private const DB_NAME = "capstone";
     private const USERNAME = "root";
-    private const PASSWORD = "12345678";
+    private const PASSWORD = "root";
     public $conn;
 
     public function getConnection() {
