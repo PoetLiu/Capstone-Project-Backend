@@ -8,7 +8,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 define("STORE_NAME", "PrimeMart");
-define("UI_URL", "http://localhost:3000/reset_password");
+define("UI_URL", "http://localhost:3000/resetpassword");
 
 class Mailer
 {
