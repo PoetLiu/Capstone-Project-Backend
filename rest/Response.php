@@ -12,7 +12,7 @@ class Response {
         header('Content-Type: application/json; charset=utf-8');
 
         // disables CORS protection
-        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: http://localhost:3000');
         echo json_encode([
             "status" => $status,
             "msg" => $msg,
