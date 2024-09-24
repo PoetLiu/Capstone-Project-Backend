@@ -1,5 +1,5 @@
 <?php
-require_once '../rest/Response.php';
+require_once __DIR__ . '/../rest/Response.php';
 session_start();
 session_destroy();
 
