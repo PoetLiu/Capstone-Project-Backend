@@ -1,10 +1,10 @@
 <?php
 
 session_start();
-require_once '../database/Database.php';
-require_once '../mail/Mailer.php';
-require_once '../dao/UserDAO.php';
-require_once '../rest/Response.php';
+require_once __DIR__ . '/../database/Database.php';
+require_once __DIR__ . '/../mail/Mailer.php';
+require_once __DIR__ . '/../dao/UserDAO.php';
+require_once __DIR__ . '/../rest/Response.php';
 
 error_reporting(E_ALL ^ (E_NOTICE | E_WARNING | E_DEPRECATED));
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
