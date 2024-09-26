@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $password_hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
-    $user = new User(null, $name, $email, $password_hash);
+    $user = new User(null, null, $name, $email, $password_hash);
 
     $result = $userDAO->register($user);
 
