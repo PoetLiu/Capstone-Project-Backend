@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 19, 2024 at 03:12 PM
+-- Generation Time: Sep 27, 2024 at 12:01 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.3.3
 
@@ -11,8 +11,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-CREATE Database capstone;
-USE capstone;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -22,6 +20,31 @@ USE capstone;
 --
 -- Database: `capstone`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `address`
+--
+
+CREATE TABLE `address` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `firstname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `province_id` int NOT NULL,
+  `postcode` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `address`
+--
+
+INSERT INTO `address` (`id`, `user_id`, `firstname`, `lastname`, `phone`, `address`, `city`, `province_id`, `postcode`) VALUES
+(4, 5, 'Albert', 'Liu', '12345678', '481 Timbercroft Cres', 'Waterloo', 1, 'N2T 2J2');
 
 -- --------------------------------------------------------
 
@@ -146,6 +169,25 @@ CREATE TABLE `provinces` (
   `abbr` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `provinces`
+--
+
+INSERT INTO `provinces` (`id`, `name`, `abbr`) VALUES
+(1, 'Alberta', 'AB'),
+(2, 'British Columbia', 'BC'),
+(3, 'Manitoba', 'MB'),
+(4, 'New Brunswick', 'NB'),
+(5, 'Newfoundland and Labrador', 'NL'),
+(6, 'Northwest Territories', 'NT'),
+(7, 'Nova Scotia', 'NS'),
+(8, 'Nunavut', 'NU'),
+(9, 'Ontario', 'ON'),
+(10, 'Prince Edward Island', 'PE'),
+(11, 'Quebec', 'QC'),
+(12, 'Saskatchewan', 'SK'),
+(13, 'Yukon', 'YT');
+
 -- --------------------------------------------------------
 
 --
@@ -163,38 +205,39 @@ CREATE TABLE `reviews` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `shipping_address`
---
-
-CREATE TABLE `shipping_address` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `fullname` varchar(100) NOT NULL,
-  `phone` varchar(50) NOT NULL,
-  `adress` varchar(255) NOT NULL,
-  `city` varchar(50) NOT NULL,
-  `province_id` int NOT NULL,
-  `postcode` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `username` varchar(50) NOT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `email` varchar(100) NOT NULL,
-  `photoUrl` varchar(100) NULL,
+  `phone` varchar(32) DEFAULT NULL,
+  `photoUrl` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `billing_address_id` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `phone`, `photoUrl`, `password_hash`, `billing_address_id`, `created_at`) VALUES
+(5, 'albert666', 'xisuiliunian@gmail.com', '123345678', '9845af7039031e52bcf085011a9065bd2ba8ce03.jpg', '$2y$10$r4BIcMQc.EdJ4A87Qt9ny.jNASNfgas.qN7yJZZO8WhAYg7lHFGn6', 4, '2024-09-22 20:02:57'),
+(7, 'albert', '457566268@qq.com', NULL, NULL, '$2y$10$JZGbG9iYJdG8QfKMhs.2L.F5Nl4JKJRwqQFckjTsFEJPRDkA5rR/.', NULL, '2024-09-24 01:44:50');
+
+--
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `address`
+--
+ALTER TABLE `address`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `province_id` (`province_id`);
 
 --
 -- Indexes for table `books`
@@ -268,23 +311,22 @@ ALTER TABLE `reviews`
   ADD KEY `book_id` (`book_id`);
 
 --
--- Indexes for table `shipping_address`
---
-ALTER TABLE `shipping_address`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `province_id` (`province_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `billing_address_id` (`billing_address_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `address`
+--
+ALTER TABLE `address`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `books`
@@ -338,7 +380,7 @@ ALTER TABLE `paypal_payment`
 -- AUTO_INCREMENT for table `provinces`
 --
 ALTER TABLE `provinces`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -347,20 +389,21 @@ ALTER TABLE `reviews`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `shipping_address`
---
-ALTER TABLE `shipping_address`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `address`
+--
+ALTER TABLE `address`
+  ADD CONSTRAINT `address_ibfk_1` FOREIGN KEY (`province_id`) REFERENCES `provinces` (`id`),
+  ADD CONSTRAINT `address_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `books`
@@ -414,11 +457,10 @@ ALTER TABLE `reviews`
   ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`);
 
 --
--- Constraints for table `shipping_address`
+-- Constraints for table `users`
 --
-ALTER TABLE `shipping_address`
-  ADD CONSTRAINT `shipping_address_ibfk_1` FOREIGN KEY (`province_id`) REFERENCES `provinces` (`id`),
-  ADD CONSTRAINT `shipping_address_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`billing_address_id`) REFERENCES `address` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
