@@ -5,7 +5,9 @@ require_once __DIR__ . '/../database/Database.php';
 require_once __DIR__ . '/../mail/Mailer.php';
 require_once __DIR__ . '/../dao/UserDAO.php';
 require_once __DIR__ . '/../rest/Response.php';
-
+require_once __DIR__ . '/../auth/Auth.php';
+require_once __DIR__ . '/../auth/Auth.php';
+Auth::requireAuthenticated();
 error_reporting(E_ALL ^ (E_NOTICE | E_WARNING | E_DEPRECATED));
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     Response::echo(1, "Unsupported http method.", null);

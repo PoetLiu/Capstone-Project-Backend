@@ -7,8 +7,10 @@ class Response {
     public static function echo($status, $msg, $data) {
         if ($status == 0) {
             http_response_code(200);
-        } else {
+        } else if ($status == 1) {
             http_response_code(400);
+        } else if ($status == 2) {
+            http_response_code(401);
         }
         header('Content-Type: application/json; charset=utf-8');
 

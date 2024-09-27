@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../rest/Response.php';
+require_once __DIR__ . '/../auth/Auth.php';
 
 $dir = __DIR__ . "/images";
 
