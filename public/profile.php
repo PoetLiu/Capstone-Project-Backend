@@ -39,7 +39,7 @@ try {
                 throw new RuntimeException('Name, email or phone is missing, please check your parameters.');
             }
             $result = $userDAO->update($userId, $name, $email, $phone);
-        } else if ($action == "UPDATE_BILLING_ADDRESS") {
+        } else if ($action == "UPDATE_BILLING_ADDRESS" || $action == "UPDATE_SHIPPING_ADDRESS") {
             $id = trim($_POST['id']);
             $firstname = trim($_POST['firstname']);
             $lastname = trim($_POST['lastname']);
@@ -51,7 +51,7 @@ try {
             if ($firstname == '' || $lastname == '' ||  $phone == '' || $address == '' || $city == '' || $provinceId == '' || $postcode == '') {
                 throw new RuntimeException('One or more parameters are missing, please check your parameters.');
             }
-            $result = $userDAO->updateAddr(
+            $result = $userDAO->updateAddr($action, 
                 $userId,
                 $id,
                 $firstname,

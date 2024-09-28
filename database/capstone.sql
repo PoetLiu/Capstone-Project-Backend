@@ -49,10 +49,10 @@ INSERT INTO `address` (`id`, `user_id`, `firstname`, `lastname`, `phone`, `addre
 -- --------------------------------------------------------
 
 --
--- Table structure for table `books`
+-- Table structure for table `products`
 --
 
-CREATE TABLE `books` (
+CREATE TABLE `products` (
   `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` text,
@@ -100,7 +100,7 @@ CREATE TABLE `cart` (
 CREATE TABLE `cart_items` (
   `id` int NOT NULL,
   `cart_id` int DEFAULT NULL,
-  `book_id` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
   `quantity` int DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -197,7 +197,7 @@ INSERT INTO `provinces` (`id`, `name`, `abbr`) VALUES
 CREATE TABLE `reviews` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
-  `book_id` int NOT NULL,
+  `product_id` int NOT NULL,
   `content` varchar(200) NOT NULL,
   `stars` tinyint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -240,9 +240,9 @@ ALTER TABLE `address`
   ADD KEY `province_id` (`province_id`);
 
 --
--- Indexes for table `books`
+-- Indexes for table `products`
 --
-ALTER TABLE `books`
+ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
   ADD KEY `category_id` (`category_id`);
 
@@ -265,8 +265,8 @@ ALTER TABLE `cart`
 --
 ALTER TABLE `cart_items`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `cart_id_product_id_unique` (`cart_id`,`book_id`) USING BTREE,
-  ADD KEY `product_id` (`book_id`);
+  ADD UNIQUE KEY `cart_id_product_id_unique` (`cart_id`,`product_id`) USING BTREE,
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `categories`
@@ -308,7 +308,7 @@ ALTER TABLE `provinces`
 ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `book_id` (`book_id`);
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `users`
@@ -329,9 +329,9 @@ ALTER TABLE `address`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `books`
+-- AUTO_INCREMENT for table `products`
 --
-ALTER TABLE `books`
+ALTER TABLE `products`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -406,10 +406,10 @@ ALTER TABLE `address`
   ADD CONSTRAINT `address_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `books`
+-- Constraints for table `products`
 --
-ALTER TABLE `books`
-  ADD CONSTRAINT `books_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
 
 --
 -- Constraints for table `card_payment`
@@ -428,7 +428,7 @@ ALTER TABLE `cart`
 --
 ALTER TABLE `cart_items`
   ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`),
-  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`);
+  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `orders`
@@ -441,7 +441,7 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `order_items`
   ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `books` (`id`);
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `paypal_payment`
@@ -454,7 +454,7 @@ ALTER TABLE `paypal_payment`
 --
 ALTER TABLE `reviews`
   ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`);
+  ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `users`

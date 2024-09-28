@@ -148,7 +148,7 @@ class UserDAO
         }
     }
 
-    public function updateAddr($id, $addressId, $firstname, $lastname, $phone, $address, $city, $province_id, $postcode)
+    public function updateAddr($action, $id, $addressId, $firstname, $lastname, $phone, $address, $city, $province_id, $postcode)
     {
         if ($addressId) {
             $query = "UPDATE address SET firstname = :firstname, lastname=:lastname, phone=:phone, address= :address, city= :city, 
@@ -187,11 +187,15 @@ class UserDAO
             }
 
             $last_id = $this->conn->lastInsertId();
-            $query = "UPDATE users SET billing_address_id = :billing_address_id WHERE id = :id";
+            if ($action == "UPDATE_BILLING_ADDRESS") {
+                $query = "UPDATE users SET billing_address_id = :address_id WHERE id = :id";
+            } else {
+                $query = "UPDATE users SET shipping_address_id = :address_id WHERE id = :id";
+            }
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':billing_address_id', $last_id);
+            $stmt->bindParam(':address_id', $last_id);
         }
 
         try {

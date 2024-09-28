@@ -7,8 +7,9 @@ class User implements JsonSerializable{
     private $photoUrl;
     private $password_hash;
     private $billing_address;
+    private $shipping_address;
 
-    public function __construct($id, $username, $email,  $phone, $photoUrl, $password_hash, $billing_address = null) {
+    public function __construct($id, $username, $email,  $phone, $photoUrl, $password_hash, $billing_address = null, $shipping_address = null) {
         $this->id = $id;
         $this->username = $username;
         $this->email = $email;
@@ -16,6 +17,7 @@ class User implements JsonSerializable{
         $this->photoUrl = $photoUrl;
         $this->password_hash = $password_hash;
         $this->billing_address = $billing_address;
+        $this->shipping_address = $shipping_address;
     }
 
     function getId() {
