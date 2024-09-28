@@ -9,12 +9,13 @@
 
 ## Capstone Backend
 <p>This is the backend code for capstone project.</p>
-How to install and run?
-1. install <a href="https://getcomposer.org/doc/00-intro.md#installation-windows">composer</a> first.
-2. composer install.
-3. modify .env accordingly.
-4. php artisan db:seed --class=ProvinceSeeder
-5. php artisan serve.
+
+## How to install and run?
+<p>1. install <a href="https://getcomposer.org/doc/00-intro.md#installation-windows">composer</a> first.</p>
+<p>2. composer install.</p>
+<p>3. modify .env accordingly.</p>
+<p>4. php artisan db:seed --class=ProvinceSeeder</p>
+<p>5. php artisan serve.</p>
 
 ## License
 
