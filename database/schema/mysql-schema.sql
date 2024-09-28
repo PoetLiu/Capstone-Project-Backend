@@ -4,10 +4,10 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-DROP TABLE IF EXISTS `address`;
+DROP TABLE IF EXISTS `addresses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `address` (
+CREATE TABLE `addresses` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `firstname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -17,11 +17,13 @@ CREATE TABLE `address` (
   `city` varchar(50) NOT NULL,
   `province_id` int NOT NULL,
   `postcode` varchar(25) NOT NULL,
+  `updated_at` date NOT NULL,
+  `created_at` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `province_id` (`province_id`),
-  CONSTRAINT `address_ibfk_1` FOREIGN KEY (`province_id`) REFERENCES `provinces` (`id`),
-  CONSTRAINT `address_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`province_id`) REFERENCES `provinces` (`id`),
+  CONSTRAINT `addresses_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `cache`;
@@ -305,8 +307,8 @@ CREATE TABLE `users` (
   UNIQUE KEY `users_email_unique` (`email`),
   KEY `billing_address_id` (`billing_address_id`),
   KEY `shipping_address_id` (`shipping_address_id`),
-  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`billing_address_id`) REFERENCES `address` (`id`),
-  CONSTRAINT `users_ibfk_2` FOREIGN KEY (`shipping_address_id`) REFERENCES `address` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`billing_address_id`) REFERENCES `addresses` (`id`),
+  CONSTRAINT `users_ibfk_2` FOREIGN KEY (`shipping_address_id`) REFERENCES `addresses` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
