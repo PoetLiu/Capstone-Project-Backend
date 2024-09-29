@@ -6,8 +6,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-
-require_once __DIR__ . "/../../tests/Data/Common.php";
+use Tests\Data\TestData;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,9 +16,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'username' => USER_NAME,
-            'email' => EMAIL,
-            'password' => Hash::make(PWD)
+            'username' => TestData::USER_NAME,
+            "email" => TestData::EMAIL,
+            'password' => Hash::make(TestData::PWD)
         ]);
     }
 }
