@@ -15,6 +15,9 @@ class UploadController extends Controller
             'file' => ['required'],
         ]);
         $path = $request->file('file')->store('avatars');
+        $user = $request->user();
+        $user->photoUrl = $path;
+        $user->save();
         return response()->json(new Response(0, "OK", ['path' => $path]));
     }
 
