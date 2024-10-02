@@ -4,6 +4,8 @@ use App\Http\Controllers\UploadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -27,5 +29,13 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(UploadController::class)->group(function () {
     Route::post('/upload/avatar', 'uploadAvatar')->middleware('auth:sanctum');
     Route::post('/upload/product', 'uploadProduct')->middleware('auth:sanctum');
+});
 
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/product', 'listProduct')->middleware('auth:sanctum');
+    Route::get('/product/{id}', 'getProduct')->middleware('auth:sanctum');
+});
+
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/category', 'listCategory')->middleware('auth:sanctum');
 });
