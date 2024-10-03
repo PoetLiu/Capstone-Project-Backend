@@ -14,6 +14,7 @@ class ProductController extends Controller
         $isFeatured = $request->query("is_featured");
         $isOnsale = $request->query("is_onsale");
         $categoryId = $request->query("category_id");
+        $name = $request->query("name");
 
         $products = DB::table("products")->
             when($isFeatured, function ($query, $isFeatured) {
@@ -27,6 +28,11 @@ class ProductController extends Controller
                 $categoryId,
                 function ($query, $categoryId) {
                     return $query->where('category_id', $categoryId);
+                }
+            )->when(
+                $name,
+                function ($query, $name) {
+                    return $query->where('name', 'like', "%".$name."%");
                 }
             )
             ->get();
