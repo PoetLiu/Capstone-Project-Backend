@@ -12,14 +12,14 @@
 
 ## How to install?
 <p>1. install <a href="https://getcomposer.org/doc/00-intro.md#installation-windows">composer</a> first.</p>
-<p>2. composer install.</p>
-<p>3. modify .env accordingly.</p>
-<p>4. php artisan migrate. </p>
+<p>2. composer install</p>
+<p>3. modify .env accordingly</p>
+<p>4. php artisan migrate </p>
 <p>5. php artisan db:seed --class=ProvinceSeeder</p>
 <p>6. php artisan storage:link</p>
 
 ## How to run it?
-<p>php artisan serve.</p>
+<p>php artisan serve</p>
 
 ## License
 
