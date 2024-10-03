@@ -19,7 +19,7 @@
 <p>6. php artisan storage:link</p>
 
 ## How to run it?
-<p>php artisan serve.</p>
+<p>php artisan serve</p>
 
 ## License
 
