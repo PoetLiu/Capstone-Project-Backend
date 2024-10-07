@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class UserController extends Controller
 {
@@ -107,9 +108,11 @@ class UserController extends Controller
                 event(new PasswordReset($user));
             }
         );
+        if ($status != Password::PASSWORD_RESET)
+            throw new RuntimeException("Reset Passowrd failed");
      
         return response()->json( 
-            new Response($status === Password::PASSWORD_RESET ? 0 : 1, $status, $request->user())
+            new Response(0, $status, $request->user())
         );
     }
 

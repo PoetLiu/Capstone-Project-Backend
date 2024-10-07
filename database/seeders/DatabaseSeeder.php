@@ -15,10 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
+        $user = User::factory()->create([
             'username' => TestData::USER_NAME,
             "email" => TestData::EMAIL,
             'password' => Hash::make(TestData::PWD)
         ]);
+
+        $user->createToken("MyApp");
     }
 }
