@@ -38,4 +38,10 @@ class ProductController extends Controller
             ->get();
         return response()->json(new Response(0, "OK", $products));
     }
+
+    public function getProduct(Request $request, string $id)
+    {
+        $product = Product::findOrFail($id);
+        return response()->json(new Response(0, "OK", $product));
+    }
 }
