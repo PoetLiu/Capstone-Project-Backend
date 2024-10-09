@@ -134,21 +134,6 @@ class UserController extends Controller
         );
     }
 
-    public function updateAvatar(Request $request)
-    {
-        $form = $request->validate([
-            'avatar' => ['required'],
-        ]);
-
-        if (!Storage::disk(env("FILESYSTEM_DISK"))->exists($form['avatar'])) {
-            throw new \RuntimeException("Unknown file, please check your avatar path.");
-        }
-        $user = Auth::user();
-        $user->photoUrl = $form['avatar'];
-        $user->save();
-        return response()->json(new Response(0, "OK", null));
-    }
-
     public function updateBasic(Request $request)
     {
         $form = $request->validate([

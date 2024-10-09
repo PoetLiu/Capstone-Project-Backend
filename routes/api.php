@@ -19,7 +19,6 @@ Route::controller(UserController::class)->group(function () {
 
     Route::get('/user/profile', 'getProfile')->middleware('auth:sanctum');
     Route::post('/user/logout', 'logout')->middleware('auth:sanctum');
-    Route::post('/user/profile/avatar', 'updateAvatar')->middleware('auth:sanctum');
     Route::post('/user/profile/basic', 'updateBasic')->middleware('auth:sanctum');
     Route::post('/user/profile/billing-address', 'updateBillingAddress')->middleware('auth:sanctum');
     Route::post('/user/profile/shipping-address', 'updateShippingAddress')->middleware('auth:sanctum');

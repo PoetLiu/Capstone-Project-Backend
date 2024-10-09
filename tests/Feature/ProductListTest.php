@@ -10,12 +10,12 @@ use App\Models\User;
 
 use function PHPUnit\Framework\assertEquals;
 
-class UserProfileTest extends TestCase
+class ProductListTest extends TestCase
 {
     use RefreshDatabase;
 
-    const URI = "/api/user/profile";
-    public function test_get_profile(): void
+    const URI = "/api/product";
+    public function test_list_product(): void
     {
         $this->seed();
         $user = User::first();
@@ -23,11 +23,21 @@ class UserProfileTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(fn (AssertableJson $json) =>
             $json->hasAll('data', "status", "msg")
-                ->has("data.id")
         );
     }
 
-    public function test_get_profile_unauth(): void
+    public function test_list_product_onsale(): void
+    {
+        $this->seed();
+        $user = User::first();
+        $response = $this->actingAs($user)->get($this::URI);
+        $response->assertStatus(200);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->hasAll('data', "status", "msg")
+        );
+    }
+
+    public function test_list_product_unauth(): void
     {
         $this->seed();
         $response = $this->get($this::URI);
