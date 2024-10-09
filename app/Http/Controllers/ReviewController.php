@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Http\Response;
 use App\Http\ResponsePage;
 use App\Models\Review;
@@ -37,17 +38,19 @@ class ReviewController extends Controller
         $pageSize = $request->query("page_size") ?? 10;
         $pageNum = $request->query("page_num") ?? 1;
         
-        $query = DB::table("reviews")->
+        $query = Review::
+            with("reviewer")->
             when($productId, function ($query, $productId) {
                 return $query->where('product_id', $productId);
             });
         $total = $query->count();
-        $products = $query
+        $reviews = $query
             ->orderBy("created_at", 'desc')
             ->offset(($pageNum - 1) * $pageSize)
             ->limit($pageSize)
             ->get();
-        return response()->json(new ResponsePage(0, "OK", $total, $pageSize, $pageNum, $products));
+        
+        return response()->json(new ResponsePage(0, "OK", $total, $pageSize, $pageNum, $reviews));
     }
 
 }
