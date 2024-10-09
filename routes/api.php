@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -37,4 +38,9 @@ Route::controller(ProductController::class)->group(function () {
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/category', 'listCategory')->middleware('auth:sanctum');
+});
+
+Route::controller(ReviewController::class)->group(function () {
+    Route::post('/review', 'newReview')->middleware('auth:sanctum');
+    Route::get('/review', 'listReview')->middleware('auth:sanctum');
 });
