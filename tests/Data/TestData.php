@@ -19,6 +19,5 @@ abstract class TestData
     const LASTNAME = "World";
     const ADDRESS = "888 Timbercroft Cresent";
     const CITY = "Waterloo";
-    const PROVINCE_ID = "1";
     const POSTCODE = "N6T 3J2";
 }

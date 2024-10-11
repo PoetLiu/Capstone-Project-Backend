@@ -5,12 +5,9 @@ namespace Tests\Feature;
 use App\Models\Address;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Data\TestData;
 use App\Models\User;
-use Database\Seeders\ProvinceSeeder;
-
-use function PHPUnit\Framework\assertEquals;
+use Illuminate\Support\Facades\DB;
 
 class UserProfileBillingAddrTest extends TestCase
 {
@@ -21,14 +18,14 @@ class UserProfileBillingAddrTest extends TestCase
     public function test_update_profile_billing_addr(): void
     {
         $this->seed();
-        $this->seed(ProvinceSeeder::class);
+        $provinceId = DB::table("provinces")->where("name", "Ontario")->first()->id;
         $user = User::first();
         $response = $this->actingAs($user)->post($this::URI, [
             "firstname" => TestData::FISTNAME, 
             "lastname" => TestData::LASTNAME,
             "address" => TestData::ADDRESS,
             "city" => TestData::CITY,
-            "province_id" => TestData::PROVINCE_ID,
+            "province_id" => $provinceId,
             "postcode" => TestData::POSTCODE,
             "phone" => TestData::PHONE,
             ]
@@ -42,7 +39,7 @@ class UserProfileBillingAddrTest extends TestCase
         $this->assertEquals($addr->lastname, TestData::LASTNAME);
         $this->assertEquals($addr->address, TestData::ADDRESS);
         $this->assertEquals($addr->city, TestData::CITY);
-        $this->assertEquals($addr->province_id, TestData::PROVINCE_ID);
+        $this->assertEquals($addr->province_id, $provinceId);
         $this->assertEquals($addr->postcode, TestData::POSTCODE);
         $this->assertEquals($addr->phone, TestData::PHONE);
     }
@@ -50,7 +47,6 @@ class UserProfileBillingAddrTest extends TestCase
     public function test_update_profile_billing_addr_missing_params(): void
     {
         $this->seed();
-        $this->seed(ProvinceSeeder::class);
         $user = User::first();
         $response = $this->actingAs($user)->post($this::URI, [
             ]
@@ -63,13 +59,13 @@ class UserProfileBillingAddrTest extends TestCase
     public function test_update_profile_billing_addr_unauth(): void
     {
         $this->seed();
-        $this->seed(ProvinceSeeder::class);
+        $provinceId = DB::table("provinces")->where("name", "Ontario")->first()->id;
         $response = $this->post($this::URI, [
             "firstname" => TestData::FISTNAME, 
             "lastname" => TestData::LASTNAME,
             "address" => TestData::ADDRESS,
             "city" => TestData::CITY,
-            "province_id" => TestData::PROVINCE_ID,
+            "province_id" => $provinceId,
             "postcode" => TestData::POSTCODE,
             "phone" => TestData::PHONE,
             ]
