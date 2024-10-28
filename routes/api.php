@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,4 +44,11 @@ Route::controller(CategoryController::class)->group(function () {
 Route::controller(ReviewController::class)->group(function () {
     Route::post('/review', 'newReview')->middleware('auth:sanctum');
     Route::get('/review', 'listReview')->middleware('auth:sanctum');
+});
+
+Route::controller(CartController::class)->group(function () {
+    Route::get('/cart', 'listCart')->middleware('auth:sanctum');
+    Route::post('/cart', 'addToCart')->middleware('auth:sanctum');
+    Route::post('/cart/{id}', 'editCartItem')->middleware('auth:sanctum');
+    Route::delete('/cart/{id}', 'removeCartItem')->middleware('auth:sanctum');
 });

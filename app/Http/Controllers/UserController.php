@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Response;
 use App\Models\User;
 use App\Models\Address;
+use App\Models\Cart;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
@@ -55,6 +56,10 @@ class UserController extends Controller
         $user->email = $form['email'];
         $user->password = Hash::make($form['password']);
         $user->save();
+
+        $cart = new Cart();
+        $cart->user_id = $user->id;
+        $cart->save();
         return response()->json(new Response(0, "OK", null));
     }
 
