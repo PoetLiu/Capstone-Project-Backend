@@ -21,8 +21,17 @@ class DatabaseSeeder extends Seeder
             "email" => TestData::EMAIL,
             'password' => Hash::make(TestData::PWD)
         ]);
-
         $user->createToken("MyApp");
+        
+        User::factory()->create(
+            [
+                "username" => "admin", 
+                "email" => "admin@primemart.com",
+                "password" => Hash::make("admin"),
+                "is_admin" => 1
+            ], 
+        );
+
 
         DB::table('provinces')->insert([
             ["name" => "Alberta", "abbr" => "AB"],
@@ -52,6 +61,7 @@ class DatabaseSeeder extends Seeder
             ["name" => "Seafood", "icon" => "fa-fish"],
             ["name" => "Frozen Foods", "icon" => "fa-ice-cream"],
         ]);
+
 
         Product::factory()->count(10)->create();
     }

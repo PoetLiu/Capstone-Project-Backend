@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Middleware\EnsureUserIsAdmin;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -27,27 +28,28 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/profile/password', 'changePassword')->middleware('auth:sanctum');
 
 
-    Route::get('/user', 'list')->middleware('guest');
+    Route::get('/user', 'list')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
 
 Route::controller(UploadController::class)->group(function () {
     Route::post('/upload/avatar', 'uploadAvatar')->middleware('auth:sanctum');
-    Route::post('/upload/product', 'uploadProduct')->middleware('auth:sanctum');
+    Route::post('/upload/product', 'uploadProduct')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('/product', 'listProduct')->middleware('auth:sanctum');
     Route::get('/product/{id}', 'getProduct')->middleware('auth:sanctum');
-    Route::post('/product', 'addProduct')->middleware('auth:sanctum');
-    Route::post('/product/{id}', 'editProduct')->middleware('auth:sanctum');
-    Route::delete('/product/{id}', 'deleteProduct')->middleware('auth:sanctum');
+
+    Route::post('/product', 'addProduct')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::post('/product/{id}', 'editProduct')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::delete('/product/{id}', 'deleteProduct')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/category', 'listCategory')->middleware('auth:sanctum');
-    Route::post('/category', 'addCategory')->middleware('auth:sanctum');
-    Route::post('/category/{id}', 'editCategory')->middleware('auth:sanctum');
-    Route::delete('/category/{id}', 'deleteCategory')->middleware('auth:sanctum');
+    Route::post('/category', 'addCategory')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::post('/category/{id}', 'editCategory')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::delete('/category/{id}', 'deleteCategory')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
 
 Route::controller(ReviewController::class)->group(function () {
