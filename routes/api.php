@@ -39,6 +39,9 @@ Route::controller(ProductController::class)->group(function () {
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/category', 'listCategory')->middleware('auth:sanctum');
+    Route::post('/category', 'addCategory')->middleware('auth:sanctum');
+    Route::post('/category/{id}', 'editCategory')->middleware('auth:sanctum');
+    Route::delete('/category/{id}', 'deleteCategory')->middleware('auth:sanctum');
 });
 
 Route::controller(ReviewController::class)->group(function () {
