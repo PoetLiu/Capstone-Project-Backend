@@ -35,6 +35,9 @@ Route::controller(UploadController::class)->group(function () {
 Route::controller(ProductController::class)->group(function () {
     Route::get('/product', 'listProduct')->middleware('auth:sanctum');
     Route::get('/product/{id}', 'getProduct')->middleware('auth:sanctum');
+    Route::post('/product', 'addProduct')->middleware('auth:sanctum');
+    Route::post('/product/{id}', 'editProduct')->middleware('auth:sanctum');
+    Route::delete('/product/{id}', 'deleteProduct')->middleware('auth:sanctum');
 });
 
 Route::controller(CategoryController::class)->group(function () {

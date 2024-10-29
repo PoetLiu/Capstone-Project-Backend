@@ -44,4 +44,82 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return response()->json(new Response(0, "OK", $product));
     }
+
+    public function addProduct(Request $request)
+    {
+        $form = $request->validate([
+            'brand' => ['required'],
+            'name' => ['required'],
+            'description' => ['required'],
+            'specifications' => ['required'],
+            'price' => ['required'],
+            'onsale_price' => [''],
+            'stock' => [''],
+            'is_featured' => [''],
+            'category_id' => ['required'],
+            'image_url' => ['required'],
+        ]);
+        if (Product::where('name', $form['name'])->exists()) {
+            throw new \RuntimeException("Product with the name exists already.");
+        }
+
+        $p = new Product();
+        $p->brand = $form['brand'];
+        $p->name = $form['name'];
+        $p->description = $form['description'];
+        $p->specifications = $form['specifications'];
+        $p->price = $form['price'];
+        $p->onsale_price = $form['onsale_price'];
+        $p->stock = $form['stock'];
+        $p->is_featured = $form['is_featured'] == 'true' ? 1 : 0;
+        $p->category_id = $form['category_id'];
+        $p->image_url = $form['image_url'];
+        $p->save();
+
+        return response()->json(new Response(0, "OK", $p));
+    }
+
+    public function editProduct(Request $request, $id)
+    {
+        $form = $request->validate([
+            'brand' => ['required'],
+            'name' => ['required'],
+            'description' => ['required'],
+            'specifications' => ['required'],
+            'price' => ['required'],
+            'onsale_price' => [''],
+            'stock' => [''],
+            'is_featured' => [''],
+            'category_id' => ['required'],
+            'image_url' => ['required'],
+        ]);
+        if (Product::where("id", $id)->doesntExist()) {
+            throw new \RuntimeException("Product with the id doens't exist.");
+        }
+
+        $p = Product::find($id);
+        $p->brand = $form['brand'];
+        $p->name = $form['name'];
+        $p->description = $form['description'];
+        $p->specifications = $form['specifications'];
+        $p->price = $form['price'];
+        $p->onsale_price = $form['onsale_price'];
+        $p->stock = $form['stock'];
+        $p->is_featured = $form['is_featured'] == 'true' ? 1 : 0;
+        $p->category_id = $form['category_id'];
+        $p->image_url = $form['image_url'];
+        $p->save();
+
+        return response()->json(new Response(0, "OK", null));
+    }
+
+    public function deleteProduct(Request $request, $id)
+    {
+        if (Product::where("id", $id)->doesntExist()) {
+            throw new \RuntimeException("Product with the id doens't exist.");
+        }
+
+        Product::where("id", $id)->delete();
+        return response()->json(new Response(0, "OK", null));
+    }
 }
