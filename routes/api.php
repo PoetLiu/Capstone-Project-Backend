@@ -14,7 +14,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::controller(UserController::class)->group(function () {
-    Route::post('/user/register', 'register')->middleware('guest');
+    Route::post('/user/register', 'add')->middleware('guest');
     Route::post('/user/login', 'login')->middleware('guest');
     Route::post('/user/forgot-password', 'forgotPassword')->middleware('guest');
     Route::post('/user/reset-password', 'resetPassword')->middleware('guest');
@@ -25,6 +25,9 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/profile/billing-address', 'updateBillingAddress')->middleware('auth:sanctum');
     Route::post('/user/profile/shipping-address', 'updateShippingAddress')->middleware('auth:sanctum');
     Route::post('/user/profile/password', 'changePassword')->middleware('auth:sanctum');
+
+
+    Route::get('/user', 'list')->middleware('guest');
 });
 
 Route::controller(UploadController::class)->group(function () {

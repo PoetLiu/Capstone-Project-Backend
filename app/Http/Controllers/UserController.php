@@ -41,7 +41,7 @@ class UserController extends Controller
         }
     }
 
-    public function register(Request $request)
+    public function add(Request $request)
     {
         $form = $request->validate([
             'username' => ['required'],
@@ -194,5 +194,19 @@ class UserController extends Controller
         } 
 
         return response()->json(new Response(0, "OK", null));
+    }
+
+    public function list(Request $request)
+    {
+        $name = $request->query("username");
+        $users = User::
+           when(
+                $name,
+                function ($query, $name) {
+                    return $query->where('username', 'like', "%".$name."%");
+                }
+            )
+            ->get();
+        return response()->json(new Response(0, "OK", $users));
     }
 }
