@@ -44,7 +44,7 @@ class CartController extends Controller
     public function listCart(Request $request)
     {
         $cart = Cart::where("user_id", $request->user()->id)->first();
-        $cartItems = CartItem::where("cart_id", $cart->id)->get();
+        $cartItems = CartItem::with("product")->where("cart_id", $cart->id)->get();
         return response()->json(new Response(0, "OK", $cartItems));
     }
 
