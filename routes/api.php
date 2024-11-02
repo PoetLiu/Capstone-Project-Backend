@@ -8,6 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CouponController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
 Route::get('/user', function (Request $request) {
@@ -63,3 +65,12 @@ Route::controller(CartController::class)->group(function () {
     Route::post('/cart/{id}', 'editCartItem')->middleware('auth:sanctum');
     Route::delete('/cart/{id}', 'removeCartItem')->middleware('auth:sanctum');
 });
+
+Route::controller(OrderController::class)->group(function () {
+    Route::post('/order/checkout', 'checkout')->middleware('auth:sanctum');
+});
+
+Route::controller(CouponController::class)->group(function () {
+    Route::post('/coupon/validate', 'validate')->middleware('auth:sanctum');
+});
+
