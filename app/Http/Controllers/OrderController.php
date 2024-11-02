@@ -77,7 +77,8 @@ class OrderController extends Controller
             $orderItem->price = $cartItem->price;
             $orderItem->save();
         }
-
+        // clear cart
+        CartItem::where("cart_id", $cart->id)->delete();
         $user->notify((new OrderConfirmed($order))->afterCommit());
         return response()->json(new Response(0, "OK", null));
     }
