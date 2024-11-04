@@ -46,7 +46,7 @@ class OrderController extends Controller
         $cartItems = CartItem::with("product")->where("cart_id", $cart->id)->get();
         $itemsTotalAmount = 0;
         $itemsDiscountAmount = 0;
-        foreach($cartItems as $cartItem) {
+        foreach ($cartItems as $cartItem) {
             $itemsTotalAmount += $cartItem->quantity * $cartItem->price;
             if ($cartItem->product->onsale_price != null)
                 $itemsDiscountAmount += $cartItem->product->price - $cartItem->product->onsale_price;
@@ -69,7 +69,7 @@ class OrderController extends Controller
         $order->total_amount = $itemsTotalAmount - $itemsDiscountAmount + $taxAmount + $shippingAmount;
         $order->save();
 
-        foreach($cartItems as $cartItem) {
+        foreach ($cartItems as $cartItem) {
             $orderItem = new OrderItem();
             $orderItem->order_id = $order->id;
             $orderItem->product_id = $cartItem->product_id;
@@ -98,14 +98,24 @@ class OrderController extends Controller
         $user = Auth::user();
         $addr = new Address();
         $addr->firstname = $form['firstname'];
-        $addr->lastname= $form['lastname'];
-        $addr->address= $form['address'];
-        $addr->city= $form['city'];
-        $addr->province_id= $form['province_id'];
-        $addr->postcode= $form['postcode'];
-        $addr->phone= $form['phone'];
+        $addr->lastname = $form['lastname'];
+        $addr->address = $form['address'];
+        $addr->city = $form['city'];
+        $addr->province_id = $form['province_id'];
+        $addr->postcode = $form['postcode'];
+        $addr->phone = $form['phone'];
         $addr->user_id = $user->id;
         $addr->save();
         return $addr;
+    }
+
+    public function listOrder(Request $request)
+    {
+        $userId = $request->query("user_id");
+        $orders = DB::table("orders")->when($userId, function ($query, $userId) {
+            return $query->where('user_id', $userId);
+        })
+            ->get();
+        return response()->json(new Response(0, "OK", $orders));
     }
 }

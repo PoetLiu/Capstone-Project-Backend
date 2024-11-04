@@ -10,14 +10,16 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\EnsureUserIsAdmin;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 Route::controller(UserController::class)->group(function () {
-    Route::post('/user/register', 'add')->middleware('guest');
+    Route::post('/user/register', 'register')->middleware('guest');
     Route::post('/user/login', 'login')->middleware('guest');
     Route::post('/user/forgot-password', 'forgotPassword')->middleware('guest');
     Route::post('/user/reset-password', 'resetPassword')->middleware('guest');
@@ -31,6 +33,7 @@ Route::controller(UserController::class)->group(function () {
 
 
     Route::get('/user', 'list')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::post('/user/create', 'add')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
 
 Route::controller(UploadController::class)->group(function () {
@@ -68,9 +71,13 @@ Route::controller(CartController::class)->group(function () {
 
 Route::controller(OrderController::class)->group(function () {
     Route::post('/order/checkout', 'checkout')->middleware('auth:sanctum');
+    Route::get('/order', 'listOrder')->middleware('auth:sanctum');
 });
 
 Route::controller(CouponController::class)->group(function () {
     Route::post('/coupon/validate', 'validate')->middleware('auth:sanctum');
 });
 
+Route::controller(DashboardController::class)->group(function () {
+    Route::get('/dashboard/summary', 'getSummary')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+});

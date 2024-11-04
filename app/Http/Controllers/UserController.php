@@ -41,12 +41,13 @@ class UserController extends Controller
         }
     }
 
-    public function add(Request $request)
+    public function register(Request $request, $allow_admin = false)
     {
         $form = $request->validate([
             'username' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required'],
+            'is_admin' => ['nullable']
         ]);
         if (User::where('email', $form['email'])->exists()) {
             throw new \RuntimeException("User with the email address exists already.");
@@ -55,12 +56,17 @@ class UserController extends Controller
         $user->username = $form['username'];
         $user->email = $form['email'];
         $user->password = Hash::make($form['password']);
+        $user->is_admin = $allow_admin ? ($form['is_admin'] == 'true' ? 1 : 0) : 0;
         $user->save();
 
         $cart = new Cart();
         $cart->user_id = $user->id;
         $cart->save();
         return response()->json(new Response(0, "OK", null));
+    }
+
+    public function add(Request $request) {
+        return $this->register($request, true);
     }
 
     public function getProfile(Request $request)
