@@ -8,12 +8,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 
-class FileUploadTest extends TestCase
+class AvatarUploadTest extends TestCase
 {
     use RefreshDatabase;
 
     const URI = "/api/upload/avatar";
-    public function test_reset_password(): void
+    public function test_upload_avatar(): void
     {
         $this->seed();
         $user = User::first();

@@ -17,12 +17,12 @@ class ProductController extends Controller
         $name = $request->query("name");
 
         $products = DB::table("products")->
-            when($isFeatured, function ($query, $isFeatured) {
+            when($isFeatured , function ($query, $isFeatured) {
                 return $query->where('is_featured', $isFeatured == "true" ? 1 : 0);
             })->when(
                 $isOnsale,
-                function ($query, $_) {
-                    return $query->whereNotNull('onsale_price');
+                function ($query, $isOnsale) {
+                    return $isOnsale == "true" ? $query->whereNotNull('onsale_price') : $query->whereNull('onsale_price');
                 }
             )->when(
                 $categoryId,
