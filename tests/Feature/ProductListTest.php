@@ -31,7 +31,7 @@ class ProductListTest extends TestCase
     {
         $this->seed();
         $user = User::first();
-        $response = $this->actingAs($user)->get($this::URI . "?is_onsale=false");
+        $response = $this->actingAs($user)->get($this::URI . "?is_onsale=true");
         $response->assertStatus(200);
         $response->assertJson(fn (AssertableJson $json) =>
             $json->hasAll('data', "status", "msg")
