@@ -20,4 +20,14 @@ abstract class TestData
     const ADDRESS = "888 Timbercroft Cresent";
     const CITY = "Waterloo";
     const POSTCODE = "N6T 3J2";
+
+    const PRODUCT_BRAND = 'xiaomi';
+    const PRODUCT_NAME = 'Smart Band Pro 7';
+    const PRODUCT_DESC = 'A awsome smart band ever.';
+    const PRODUCT_SPEC = '10cm * 2cm';
+    const PRODUCT_PRICE = '177.99';
+    const PRODUCT_ONSALE_PRICE = '159.99';
+    const PRODUCT_STOCK = '10';
+    const PRODUCT_FEATURED = 'false';
+    const PRODUCT_IMG = 'smartband.png';
 }
