@@ -16,6 +16,7 @@ class CartController extends Controller
     {
         $form = $request->validate([
             'product_id' => ['required'],
+            'quantity' => [''],
         ]);
 
         $cart = Cart::where("user_id", $request->user()->id)->first();
@@ -31,10 +32,10 @@ class CartController extends Controller
             $cartItem = new CartItem();
             $cartItem->cart_id = $cart->id;
             $cartItem->product_id = $product->id;
-            $cartItem->quantity = 1;
+            $cartItem->quantity = $form['quantity'];
             $cartItem->price = $product->price;
         } else {
-            $cartItem->quantity++;
+            $cartItem->quantity += $form['quantity'];
         }
         $cartItem->save();
 
