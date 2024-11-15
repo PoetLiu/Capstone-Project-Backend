@@ -30,4 +30,8 @@ abstract class TestData
     const PRODUCT_STOCK = '10';
     const PRODUCT_FEATURED = 'false';
     const PRODUCT_IMG = 'smartband.png';
+
+    const REVIEW_TITLE = 'Good Product';
+    const REVIEW_CONTENT = 'I like it very much.';
+    const REVIEW_STARS = 5;
 }

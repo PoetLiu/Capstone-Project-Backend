@@ -97,6 +97,10 @@ class ProductController extends Controller
             throw new \RuntimeException("Product with the id doens't exist.");
         }
 
+        if (Product::where('name', $form['name'])->where('id', '!=', $id)->exists()) {
+            throw new \RuntimeException("Product with the name exists already.");
+        }
+
         $p = Product::find($id);
         $p->brand = $form['brand'];
         $p->name = $form['name'];
