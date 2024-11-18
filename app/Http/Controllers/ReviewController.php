@@ -40,7 +40,6 @@ class ReviewController extends Controller
         
         $query = Review::
             with("reviewer")->
-            where("user_id", $request->user()->id) ->
             when($productId, function ($query, $productId) {
                 return $query->where('product_id', $productId);
             });
