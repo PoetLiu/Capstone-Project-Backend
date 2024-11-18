@@ -17,24 +17,29 @@ use RuntimeException;
 
 class OrderController extends Controller
 {
+    private $stripe;
+    public function __construct() {
+        $this->stripe = new \Stripe\StripeClient(env("STRIPE_SECRET_KEY"));
+    }
+
     public function checkout(Request $request)
     {
         $form = $request->validate([
             'include_gift' => ['required'],
-            'coupon_id' => [''],
-            'shipping_address_id' => [''],
-            'billing_address_id' => [''],
+            'coupon_id' => ['nullable'],
+            'shipping_address_id' => ['nullable'],
+            'billing_address_id' => ['nullable'],
         ]);
 
         $order = new Order();
-        if ($form['shipping_address_id'] == null) {
+        if (!$request->has('shipping_address_id')) {
             $address = $this->createAddress($request, "shipping_address_");
             $order->shipping_address_id = $address->id;
         } else {
             $order->shipping_address_id = $form['shipping_address_id'];
         }
 
-        if ($form['billing_address_id'] == null) {
+        if (!$request->has('billing_address_id')) {
             $address = $this->createAddress($request, "billing_address_");
             $order->billing_address_id = $address->id;
         } else {
@@ -51,7 +56,7 @@ class OrderController extends Controller
             if ($cartItem->product->onsale_price != null)
                 $itemsDiscountAmount += $cartItem->product->price - $cartItem->product->onsale_price;
         }
-        if ($form['coupon_id'] != null) {
+        if ($request->has('coupon_id')) {
             $coupon = Coupon::find($form['coupon_id']);
             if ($itemsTotalAmount > $coupon->min_amount) {
                 $itemsDiscountAmount += $coupon->discount;
@@ -80,7 +85,49 @@ class OrderController extends Controller
         // clear cart
         CartItem::where("cart_id", $cart->id)->delete();
         $user->notify((new OrderConfirmed($order))->afterCommit());
-        return response()->json(new Response(0, "OK", null));
+        return $this->stripeCheckout($cartItems);
+    }
+
+    private function createStripePrices($stripe, $cartItems) {
+        $lineItems = array();
+        foreach ($cartItems as $cartItem) {
+            $product = $stripe->products->create(['name' => $cartItem->product->name]);
+            $price = $stripe->prices->create([
+                'product' => "$product->id",
+                'unit_amount' => $cartItem->product->price * 100,
+                'currency' => 'cad',
+            ]);
+
+            $lineItems[] = [
+                'price' => "$price->id",
+                'quantity' => $cartItem->quantity,
+            ];
+        } 
+        return $lineItems;
+    }
+
+    private function stripeCheckout($cartItems) {
+        $lineItems = $this->createStripePrices($this->stripe, $cartItems);
+        $YOUR_DOMAIN = env("UI_URL");
+        $checkout_session = $this->stripe->checkout->sessions->create([
+          'ui_mode' => 'embedded',
+          'line_items' => $lineItems,
+          'mode' => 'payment',
+          'return_url' => $YOUR_DOMAIN . '/return?session_id={CHECKOUT_SESSION_ID}',
+        ]);
+        
+        return response()->json(new Response(0, "OK", ['clientSecret' => $checkout_session->client_secret]));
+    }
+
+    public function getCheckoutStatus(Request $request) {
+        $form = $request->validate([
+            'session_id' => ['required'],
+        ]);
+
+        $session = $this->stripe->checkout->sessions->retrieve($form["session_id"]);
+        return response()->json(new Response(0, "OK", 
+            ['status' => $session->status, 'customer_email' => $session->customer_details->email])
+        );
     }
 
     private function createAddress(Request $request, $prefix)
