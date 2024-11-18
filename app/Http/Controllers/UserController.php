@@ -35,7 +35,7 @@ class UserController extends Controller
         if (Auth::attempt($form)) {
             $user = Auth::user();
             $token = $user->createToken('MyApp')->plainTextToken;
-            return response()->json(new Response(0, "OK", ['token' => $token]));
+            return response()->json(new Response(0, "OK", ['token' => $token, 'user' => $user]));
         } else {
             throw new \RuntimeException("The provided credentials do not match our records.");
         }
