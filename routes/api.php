@@ -42,8 +42,8 @@ Route::controller(UploadController::class)->group(function () {
 });
 
 Route::controller(ProductController::class)->group(function () {
-    Route::get('/product', 'listProduct')->middleware('auth:sanctum');
-    Route::get('/product/{id}', 'getProduct')->middleware('auth:sanctum');
+    Route::get('/product', 'listProduct');
+    Route::get('/product/{id}', 'getProduct');
 
     Route::post('/product', 'addProduct')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
     Route::post('/product/{id}', 'editProduct')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
@@ -51,7 +51,7 @@ Route::controller(ProductController::class)->group(function () {
 });
 
 Route::controller(CategoryController::class)->group(function () {
-    Route::get('/category', 'listCategory')->middleware('auth:sanctum');
+    Route::get('/category', 'listCategory');
     Route::post('/category', 'addCategory')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
     Route::post('/category/{id}', 'editCategory')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
     Route::delete('/category/{id}', 'deleteCategory')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
@@ -59,7 +59,7 @@ Route::controller(CategoryController::class)->group(function () {
 
 Route::controller(ReviewController::class)->group(function () {
     Route::post('/review', 'newReview')->middleware('auth:sanctum');
-    Route::get('/review', 'listReview')->middleware('auth:sanctum');
+    Route::get('/review', 'listReview');
 });
 
 Route::controller(CartController::class)->group(function () {
@@ -71,6 +71,7 @@ Route::controller(CartController::class)->group(function () {
 
 Route::controller(OrderController::class)->group(function () {
     Route::post('/order/checkout', 'checkout')->middleware('auth:sanctum');
+    Route::post('/order/checkout/status', 'getCheckoutStatus')->middleware('auth:sanctum');
     Route::get('/order', 'listOrder')->middleware('auth:sanctum');
 });
 

@@ -53,7 +53,7 @@ class ProductListTest extends TestCase
     {
         $this->seed();
         $response = $this->get($this::URI);
-        $response->assertStatus(400);
-        $response->assertJsonPath("status", 1);
+        $response->assertStatus(200);
+        $response->assertJsonPath("status", 0);
     }
 }

@@ -52,8 +52,8 @@ class ProductDetailTest extends TestCase
         $this->seed();
         $product = Product::first();
         $response = $this->get($this::URI . $product->id);
-        $response->assertStatus(400);
-        $response->assertJsonPath("status", 1);
+        $response->assertStatus(200);
+        $response->assertJsonPath("status", 0);
     }
 
     public function test_product_detail_unknown(): void
