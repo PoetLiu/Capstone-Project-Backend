@@ -18,7 +18,8 @@ use RuntimeException;
 class OrderController extends Controller
 {
     private $stripe;
-    public function __construct() {
+    public function __construct()
+    {
         $this->stripe = new \Stripe\StripeClient(env("STRIPE_SECRET_KEY"));
     }
 
@@ -61,11 +62,11 @@ class OrderController extends Controller
             if ($itemsTotalAmount > $coupon->min_amount) {
                 $itemsDiscountAmount += $coupon->discount;
             }
+            $order->coupon_id = $form['coupon_id'];
         }
         $taxAmount = ($itemsTotalAmount - $itemsDiscountAmount) * 0.13;
         $shippingAmount = ($itemsTotalAmount - $itemsDiscountAmount) * 0.05;
         $order->user_id = $user->id;
-        $order->coupon_id = $form['coupon_id'];
         $order->include_gift = $form['include_gift'] == "true" ? 1 : 0;
         $order->items_total_amount = $itemsTotalAmount;
         $order->items_discount_amount = $itemsDiscountAmount;
@@ -88,7 +89,8 @@ class OrderController extends Controller
         return $this->stripeCheckout($cartItems);
     }
 
-    private function createStripePrices($stripe, $cartItems) {
+    private function createStripePrices($stripe, $cartItems)
+    {
         $lineItems = array();
         foreach ($cartItems as $cartItem) {
             $product = $stripe->products->create(['name' => $cartItem->product->name]);
@@ -102,31 +104,37 @@ class OrderController extends Controller
                 'price' => "$price->id",
                 'quantity' => $cartItem->quantity,
             ];
-        } 
+        }
         return $lineItems;
     }
 
-    private function stripeCheckout($cartItems) {
+    private function stripeCheckout($cartItems)
+    {
         $lineItems = $this->createStripePrices($this->stripe, $cartItems);
         $YOUR_DOMAIN = env("UI_URL");
         $checkout_session = $this->stripe->checkout->sessions->create([
-          'ui_mode' => 'embedded',
-          'line_items' => $lineItems,
-          'mode' => 'payment',
-          'return_url' => $YOUR_DOMAIN . '/return?session_id={CHECKOUT_SESSION_ID}',
+            'ui_mode' => 'embedded',
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'return_url' => $YOUR_DOMAIN . '/return?session_id={CHECKOUT_SESSION_ID}',
         ]);
-        
+
         return response()->json(new Response(0, "OK", ['clientSecret' => $checkout_session->client_secret]));
     }
 
-    public function getCheckoutStatus(Request $request) {
+    public function getCheckoutStatus(Request $request)
+    {
         $form = $request->validate([
             'session_id' => ['required'],
         ]);
 
         $session = $this->stripe->checkout->sessions->retrieve($form["session_id"]);
-        return response()->json(new Response(0, "OK", 
-            ['status' => $session->status, 'customer_email' => $session->customer_details->email])
+        return response()->json(
+            new Response(
+                0,
+                "OK",
+                ['status' => $session->status, 'customer_email' => $session->customer_details->email]
+            )
         );
     }
 
@@ -144,13 +152,13 @@ class OrderController extends Controller
 
         $user = Auth::user();
         $addr = new Address();
-        $addr->firstname = $form['firstname'];
-        $addr->lastname = $form['lastname'];
-        $addr->address = $form['address'];
-        $addr->city = $form['city'];
-        $addr->province_id = $form['province_id'];
-        $addr->postcode = $form['postcode'];
-        $addr->phone = $form['phone'];
+        $addr->firstname = $form[$prefix . 'firstname'];
+        $addr->lastname = $form[$prefix . 'lastname'];
+        $addr->address = $form[$prefix . 'address'];
+        $addr->city = $form[$prefix . 'city'];
+        $addr->province_id = $form[$prefix . 'province_id'];
+        $addr->postcode = $form[$prefix . 'postcode'];
+        $addr->phone = $form[$prefix . 'phone'];
         $addr->user_id = $user->id;
         $addr->save();
         return $addr;
