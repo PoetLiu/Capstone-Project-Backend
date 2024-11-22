@@ -116,7 +116,7 @@ class OrderController extends Controller
             'ui_mode' => 'embedded',
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'return_url' => $YOUR_DOMAIN . '/return?session_id={CHECKOUT_SESSION_ID}',
+            'return_url' => $YOUR_DOMAIN . '/thankyou?session_id={CHECKOUT_SESSION_ID}',
         ]);
 
         return response()->json(new Response(0, "OK", ['clientSecret' => $checkout_session->client_secret]));

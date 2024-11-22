@@ -203,7 +203,7 @@ CREATE TABLE `orders` (
   `payment_type` tinyint DEFAULT NULL,
   `billing_address_id` int NOT NULL,
   `shipping_address_id` int NOT NULL,
-  `coupon_id` int NOT NULL,
+  `coupon_id` int NULL,
   `include_gift` tinyint(1) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
