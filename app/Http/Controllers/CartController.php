@@ -33,7 +33,7 @@ class CartController extends Controller
             $cartItem->cart_id = $cart->id;
             $cartItem->product_id = $product->id;
             $cartItem->quantity = $form['quantity'];
-            $cartItem->price = $product->price;
+            $cartItem->price = $product->onsale_price ? $product->onsale_price : $product->price;
         } else {
             $cartItem->quantity += $form['quantity'];
         }
