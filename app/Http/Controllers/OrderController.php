@@ -13,6 +13,7 @@ use App\Models\CartItem;
 use App\Models\Coupon;
 use App\Models\OrderItem;
 use App\Notifications\OrderConfirmed;
+use App\Notifications\OrderCreated;
 use RuntimeException;
 
 class OrderController extends Controller
@@ -85,8 +86,8 @@ class OrderController extends Controller
         }
         // clear cart
         CartItem::where("cart_id", $cart->id)->delete();
-        $user->notify((new OrderConfirmed($order))->afterCommit());
-        return $this->stripeCheckout($cartItems);
+        $user->notify((new OrderCreated($order))->afterCommit());
+        return $this->stripeCheckout($order, $cartItems);
     }
 
     private function createStripePrices($stripe, $cartItems)
@@ -108,7 +109,7 @@ class OrderController extends Controller
         return $lineItems;
     }
 
-    private function stripeCheckout($cartItems)
+    private function stripeCheckout($order, $cartItems)
     {
         $lineItems = $this->createStripePrices($this->stripe, $cartItems);
         $YOUR_DOMAIN = env("UI_URL");
@@ -119,6 +120,8 @@ class OrderController extends Controller
             'return_url' => $YOUR_DOMAIN . '/thankyou?session_id={CHECKOUT_SESSION_ID}',
         ]);
 
+        $order->stripe_session_id = $checkout_session->id;
+        $order->save();
         return response()->json(new Response(0, "OK", ['clientSecret' => $checkout_session->client_secret]));
     }
 
@@ -128,12 +131,22 @@ class OrderController extends Controller
             'session_id' => ['required'],
         ]);
 
+        $order = Order::where("stripe_session_id", $form["session_id"])->first();
         $session = $this->stripe->checkout->sessions->retrieve($form["session_id"]);
+
+        $user = Auth::user();
+        if ($order->status != $session->status) {
+            $order->status = $session->status;
+            if ($order->status == 'complete') {
+                $user->notify((new OrderConfirmed($order))->afterCommit());
+            }
+            $order->save();
+        }
         return response()->json(
             new Response(
                 0,
                 "OK",
-                ['status' => $session->status, 'customer_email' => $session->customer_details->email]
+                ['status' => $session->status, 'customer_email' => $session->customer_details?->email]
             )
         );
     }

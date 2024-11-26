@@ -76,6 +76,9 @@ Route::controller(OrderController::class)->group(function () {
 });
 
 Route::controller(CouponController::class)->group(function () {
+    Route::post('/coupon', 'create')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::post('/coupon/{id}', 'edit')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::get('/coupon', 'list')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
     Route::post('/coupon/validate', 'validate')->middleware('auth:sanctum');
 });
 
