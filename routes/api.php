@@ -31,7 +31,6 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/profile/shipping-address', 'updateShippingAddress')->middleware('auth:sanctum');
     Route::post('/user/profile/password', 'changePassword')->middleware('auth:sanctum');
 
-
     Route::get('/user', 'list')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
     Route::post('/user/create', 'add')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
@@ -76,10 +75,10 @@ Route::controller(OrderController::class)->group(function () {
 });
 
 Route::controller(CouponController::class)->group(function () {
-    Route::post('/coupon', 'create')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
-    Route::post('/coupon/{id}', 'edit')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
-    Route::get('/coupon', 'list')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
     Route::post('/coupon/validate', 'validate')->middleware('auth:sanctum');
+    Route::post('/coupon/{id}', 'edit')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::post('/coupon', 'create')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+    Route::get('/coupon', 'list')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
 
 Route::controller(DashboardController::class)->group(function () {
