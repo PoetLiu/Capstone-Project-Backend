@@ -33,6 +33,8 @@ Route::controller(UserController::class)->group(function () {
 
     Route::get('/user', 'list')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
     Route::post('/user/create', 'add')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
+
+    Route::get('/user/order', 'listOrder')->middleware('auth:sanctum');
 });
 
 Route::controller(UploadController::class)->group(function () {
@@ -71,7 +73,7 @@ Route::controller(CartController::class)->group(function () {
 Route::controller(OrderController::class)->group(function () {
     Route::post('/order/checkout', 'checkout')->middleware('auth:sanctum');
     Route::post('/order/checkout/status', 'getCheckoutStatus')->middleware('auth:sanctum');
-    Route::get('/order', 'listOrder')->middleware('auth:sanctum');
+    Route::get('/order', 'listOrder')->middleware(['auth:sanctum', EnsureUserIsAdmin::class]);
 });
 
 Route::controller(CouponController::class)->group(function () {

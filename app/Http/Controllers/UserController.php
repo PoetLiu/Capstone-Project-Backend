@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Response;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
@@ -215,5 +217,13 @@ class UserController extends Controller
             )
             ->get();
         return response()->json(new Response(0, "OK", $users));
+    }
+
+    public function listOrder(Request $request)
+    {
+        $user = $request->user();
+        $orders = Order::with("items")->where("user_id", $user->id)
+            ->get();
+        return response()->json(new Response(0, "OK", $orders));
     }
 }
