@@ -62,7 +62,8 @@ class DatabaseSeeder extends Seeder
             ["name" => "Frozen Foods", "icon" => "fa-ice-cream"],
         ]);
 
-
-        Product::factory()->count(20)->create();
+        // Product::factory()->count(20)->create();
+        $productSqlFile = "database/seeders/products_seeder.sql";
+        DB::unprepared(file_get_contents($productSqlFile));
     }
 }
