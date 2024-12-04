@@ -121,6 +121,7 @@ class OrderController extends Controller
         ]);
 
         $order->stripe_session_id = $checkout_session->id;
+        $order->stripe_client_secret = $checkout_session->client_secret;
         $order->save();
         return response()->json(new Response(0, "OK", ['clientSecret' => $checkout_session->client_secret]));
     }
