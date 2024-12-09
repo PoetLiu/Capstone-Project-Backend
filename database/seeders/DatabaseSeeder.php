@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Tests\Data\TestData;
@@ -62,8 +63,11 @@ class DatabaseSeeder extends Seeder
             ["name" => "Frozen Foods", "icon" => "fa-ice-cream"],
         ]);
 
-        // Product::factory()->count(20)->create();
-        $productSqlFile = "database/seeders/products_seeder.sql";
-        DB::unprepared(file_get_contents($productSqlFile));
+        if (App::Environment() === 'testing') {
+            Product::factory()->count(20)->create();
+        } else {
+            $productSqlFile = "database/seeders/products_seeder.sql";
+            DB::unprepared(file_get_contents($productSqlFile));
+        }
     }
 }
